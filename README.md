@@ -779,3 +779,7 @@ It is designed to be:
 - free from forced cloud dependencies
 
 The current version runs immediately on a normal PC and provides the core professional logic needed before adding cameras, AI models, dashboards, and full persistence.
+It is still in it's development phase and is a prototype we would be contributing to it to improve the skeleton and soon make it a full professional software
+
+                                  -------------------DISCLAIMER----------------------
+This is for educational and safe keeping surveillance tool and is not meant for inappropriate or bad purposes and it would be hoped that it would be used for personal legitimate use                                  
