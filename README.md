@@ -1,6 +1,3 @@
-# open-sight
-OpenSight Private is a high-quality, self-hosted video analytics platform for personal use. It processes local camera streams, detects and tracks objects, generates searchable events, and provides intelligent video search, monitoring, retention, security, and privacy controls—all without cloud processing. but on the users own machine
-
 # OpenSight Private
 
 OpenSight Private is a local, privacy-first video analytics platform skeleton designed for private, on-premises use.
@@ -780,6 +777,7 @@ It is designed to be:
 
 The current version runs immediately on a normal PC and provides the core professional logic needed before adding cameras, AI models, dashboards, and full persistence.
 It is still in it's development phase and is a prototype we would be contributing to it to improve the skeleton and soon make it a full professional software
+Fo developers both the skeleton and the prototype is published in the repo both in different folders for better arrangment 
 
                                   -------------------DISCLAIMER----------------------
 This is for educational and safe keeping surveillance tool and is not meant for inappropriate or bad purposes and it would be hoped that it would be used for personal legitimate use                                  
