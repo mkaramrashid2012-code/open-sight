@@ -1,0 +1,45 @@
+```
+# Dependencies
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+.env.local
+.env.*
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+
+# Testing
+.coverage
+htmlcov/
+.coverage.*
+.cache/
+.pytest_cache/
+.mypy_cache/
+
+# Logs
+*.log
+
+# Environment specific
+venv/
+.venv/
+env/
+ENV/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Security
+.opensight/.env*
+```
