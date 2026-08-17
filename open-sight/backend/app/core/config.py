@@ -2,6 +2,7 @@
 import os
 from functools import lru_cache
 from pathlib import Path
+from typing import Optional
 from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -120,7 +121,7 @@ class Settings(BaseSettings):
         le=64,
         description="Maximum number of concurrent camera streams"
     )
-    worker_thread_pool_size: int = Field(
+    worker_thread_pool_size: Optional[int] = Field(
         default=None,
         ge=1,
         le=32,
