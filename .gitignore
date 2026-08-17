@@ -20,22 +20,24 @@ dist/
 .env.local
 *.env.*
 
-# Coverage reports
-.coverage
-coverage/
-htmlcov/
-
-# IDE files
+# Editors and IDEs
 .vscode/
 .idea/
 *.swp
 *.swo
+*.tmp
 
 # OS generated files
 .DS_Store
 Thumbs.db
 
 # Testing
+.coverage
+coverage/
+htmlcov/
 .pytest_cache/
 .mypy_cache/
+
+# Docker
+.dockerenv
 ```
