@@ -399,3 +399,7 @@ def init_cross_camera_tracker(db_session_factory) -> CrossCameraTracker:
 def get_cross_camera_tracker() -> Optional[CrossCameraTracker]:
     """Get the global cross-camera tracker."""
     return _cross_camera_tracker
+
+
+# Alias for backward compatibility
+ReIDService = CrossCameraTracker

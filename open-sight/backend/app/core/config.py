@@ -48,6 +48,10 @@ class Settings(BaseSettings):
         default="./data/media",
         description="Root directory for media storage"
     )
+    MEDIA_STORAGE_ROOT: str = Field(
+        default="./data/media",
+        description="Root directory for media storage (alias for compatibility)"
+    )
     clips_root: str = Field(
         default="./data/clips",
         description="Root directory for video clips"

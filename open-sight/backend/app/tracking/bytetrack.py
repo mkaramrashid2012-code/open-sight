@@ -3,6 +3,35 @@ from typing import Any, Optional
 import numpy as np
 
 
+class TrackerService:
+    """Service wrapper for ByteTrack multi-object tracking."""
+    
+    def __init__(self):
+        self._adapter = None
+        self._initialized = False
+    
+    def initialize(self):
+        """Lazy initialization of the tracker."""
+        if not self._initialized:
+            try:
+                import supervision as sv
+                self._adapter = ByteTrackAdapter()
+                self._initialized = True
+            except ImportError as exc:
+                raise RuntimeError("Install supervision to enable tracking") from exc
+        return self._adapter
+    
+    def update(self, detections: Any, frame: Optional[np.ndarray] = None) -> list[dict]:
+        """Update tracker with new detections."""
+        adapter = self.initialize()
+        return adapter.update(detections, frame)
+    
+    def reset(self):
+        """Reset tracker state."""
+        if self._adapter:
+            self._adapter.reset()
+
+
 class ByteTrackAdapter:
     """Adapter for ByteTrack multi-object tracking."""
     

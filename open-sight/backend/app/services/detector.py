@@ -42,7 +42,7 @@ class DetectorService:
             raise ImportError("ultralytics package required")
 
         try:
-            self.model = YOLO(settings.YOLO_MODEL_PATH)
+            self.model = YOLO(settings.yolo_model_path)
             self.model.to(self.device)
             # Warmup for stable latency (mock if no image provided)
             logger.info("YOLO model loaded successfully")
