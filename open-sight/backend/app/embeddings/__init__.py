@@ -1,4 +1,7 @@
 """Embeddings package initialization."""
-from app.embeddings.appearance import AppearanceEmbedder
+from app.embeddings.appearance import DeepAppearanceEngine, AppearanceEmbedding
 
-__all__ = ["AppearanceEmbedder"]
+# Backward compatibility alias
+AppearanceEmbedder = DeepAppearanceEngine
+
+__all__ = ["DeepAppearanceEngine", "AppearanceEmbedding", "AppearanceEmbedder"]
