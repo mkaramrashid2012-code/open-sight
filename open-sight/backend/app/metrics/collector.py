@@ -226,7 +226,9 @@ class MetricsCollector:
             lines.append(f"# HELP {name} Counter metric")
             lines.append(f"# TYPE {name} counter")
             if '{' in key:
-                lines.append(f"{name}{key.split('{')[1]!s[:-1]} {value}")
+                # Extract labels part and format correctly
+                labels_part = key.split('{', 1)[1]
+                lines.append(f"{name}{{{labels_part[:-1]}}} {value}")
             else:
                 lines.append(f"{name} {value}")
         

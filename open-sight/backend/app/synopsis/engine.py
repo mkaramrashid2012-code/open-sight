@@ -4,7 +4,7 @@ Creates compressed timeline views by stacking non-overlapping events - core Brie
 """
 import numpy as np
 from typing import List, Dict, Tuple, Optional
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import datetime, timedelta
 from collections import defaultdict
 import logging

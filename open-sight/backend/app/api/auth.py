@@ -1,13 +1,10 @@
 """Authentication API endpoints for enterprise-grade security."""
 import logging
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from uuid import UUID, uuid4
 
 from fastapi import APIRouter, Depends, HTTPException, Request, status
-from sqlalchemy.orm import Session
 
-from app.core.config import settings
-from app.core.db import get_db
 from app.security.auth import (
     User,
     UserCreate,
@@ -15,10 +12,8 @@ from app.security.auth import (
     APIKeyInfo,
     generate_api_key,
     generate_access_token,
-    verify_access_token,
     get_password_hash,
     require_auth,
-    require_superuser,
     audit_log,
     rate_limit,
     auth_rate_limiter,
@@ -118,9 +113,6 @@ async def create_api_key(
 ):
     """Generate a new API key for the authenticated user."""
     api_key = generate_api_key()
-    expires_at = datetime.now(timezone.utc).timezone + timedelta(days=expires_days) if expires_days else None
-    
-    from datetime import timedelta
     expires_at = datetime.now(timezone.utc) + timedelta(days=expires_days) if expires_days else None
     
     key_data = {

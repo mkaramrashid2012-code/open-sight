@@ -2,7 +2,6 @@
 Production YOLOv8 Detector Service
 Handles model loading, GPU/CPU selection, batch inference, and error recovery.
 """
-import cv2
 import numpy as np
 import logging
 from typing import List, Optional
@@ -28,10 +27,10 @@ class DetectionResult:
 class DetectorService:
     def __init__(self):
         self.model: Optional[YOLO] = None
-        self.device = "cuda" if settings.USE_GPU else "cpu"
-        self.conf_threshold = settings.DETECTION_CONFIDENCE_THRESHOLD
-        self.iou_threshold = settings.DETECTION_IOU_THRESHOLD
-        self.classes_filter = settings.DETECTION_CLASSES_FILTER  # e.g., [0, 2] for person, car
+        self.device = "cuda" if settings.use_gpu else "cpu"
+        self.conf_threshold = settings.detection_confidence_threshold
+        self.iou_threshold = settings.detection_iou_threshold
+        self.classes_filter = settings.detection_classes_filter  # e.g., [0, 2] for person, car
         
         logger.info(f"Initializing Detector on device: {self.device}")
         self._load_model()
@@ -43,7 +42,7 @@ class DetectorService:
             raise ImportError("ultralytics package required")
 
         try:
-            self.model = YOLO(settings.YOLO_MODEL_PATH)
+            self.model = YOLO(settings.yolo_model_path)
             self.model.to(self.device)
             # Warmup for stable latency (mock if no image provided)
             logger.info("YOLO model loaded successfully")

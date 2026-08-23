@@ -7,7 +7,7 @@ import logging
 from datetime import datetime, timedelta
 
 from app.core.config import settings
-from app.db.session import AsyncSessionLocal
+from app.db import AsyncSessionLocal
 from app.repositories.event_repository import EventRepository
 from app.repositories.media_repository import MediaRepository
 from app.services.media_service import MediaService
@@ -34,7 +34,7 @@ class RetentionWorker:
                 logger.error(f"Retention cleanup failed: {e}", exc_info=True)
             
             # Sleep for 1 hour
-            await asyncio.sleep(settings.RETENTION_CHECK_INTERVAL_HOURS * 3600)
+            await asyncio.sleep(settings.retention_check_interval_hours * 3600)
 
     async def stop(self):
         self.running = False
@@ -51,7 +51,7 @@ class RetentionWorker:
             media_repo = MediaRepository(session)
             
             # 1. Find expired events (older than retention period)
-            cutoff_date = now - timedelta(days=settings.RETENTION_EVENT_DAYS)
+            cutoff_date = now - timedelta(days=settings.retention_event_days)
             
             # Get events eligible for deletion
             expired_events = await event_repo.get_events_older_than(cutoff_date)

@@ -3,8 +3,7 @@ Production ByteTrack Tracker Service
 Handles track lifecycle, state machine, trajectory storage, and quality scoring.
 """
 import logging
-import numpy as np
-from typing import List, Dict, Optional
+from typing import List, Dict
 from datetime import datetime
 
 from app.services.detector import DetectionResult
@@ -69,10 +68,10 @@ class TrackedObject:
         """Called when no detection matched (predict step)."""
         self.consecutive_misses += 1
         if self.state == TrackState.ACTIVE:
-            if self.consecutive_misses > settings.TRACK_MAX_MISSES:
+            if self.consecutive_misses > settings.track_max_misses:
                 self.state = TrackState.LOST
         elif self.state == TrackState.LOST:
-            if self.consecutive_misses > settings.TRACK_MAX_MISSES * 2:
+            if self.consecutive_misses > settings.track_max_misses * 2:
                 self.state = TrackState.ENDED
 
     def _update_trajectory(self):
@@ -83,7 +82,7 @@ class TrackedObject:
             "confidence": self.confidence
         })
         # Limit trajectory size
-        max_len = settings.TRACK_TRAJECTORY_MAX_LENGTH
+        max_len = settings.track_trajectory_max_length
         if len(self.trajectory) > max_len:
             self.trajectory = self.trajectory[-max_len:]
 
@@ -94,7 +93,7 @@ class TrackedObject:
             return
             
         avg_conf = self.confidence # Simplified: use current conf
-        consistency = 1.0 - (self.consecutive_misses / (settings.TRACK_MAX_MISSES + 1))
+        consistency = 1.0 - (self.consecutive_misses / (settings.track_max_misses + 1))
         self.quality_score = (avg_conf + consistency) / 2.0
 
 
@@ -102,7 +101,7 @@ class TrackerService:
     def __init__(self):
         self.tracks: Dict[int, TrackedObject] = {}
         self.next_track_id = 1
-        self.max_age = settings.TRACK_MAX_AGE
+        self.max_age = settings.track_max_age
         logger.info("TrackerService initialized")
 
     async def update(self, detections: List[DetectionResult]) -> List[TrackedObject]:
@@ -133,7 +132,7 @@ class TrackerService:
                     continue
                     
                 iou = self._calculate_iou(track.box, det.box)
-                if iou > best_iou and iou > settings.TRACK_IOU_THRESHOLD:
+                if iou > best_iou and iou > settings.track_iou_threshold:
                     best_iou = iou
                     best_det_idx = i
             

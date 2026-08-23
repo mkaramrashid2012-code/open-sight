@@ -8,7 +8,6 @@ import logging
 import hashlib
 from datetime import datetime
 from typing import Optional
-import subprocess
 
 from app.core.config import settings
 from app.models.entities import Event

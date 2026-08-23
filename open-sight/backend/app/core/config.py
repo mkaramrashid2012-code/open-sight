@@ -1,10 +1,9 @@
 """Enterprise-grade configuration management for OpenSight Private."""
 import os
 from functools import lru_cache
-from pathlib import Path
 from typing import Optional
 from pydantic import Field, field_validator
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
@@ -15,6 +14,16 @@ class Settings(BaseSettings):
         default="postgresql+psycopg://opensight:change-me@localhost:5432/opensight",
         description="PostgreSQL connection URL with pgvector support"
     )
+    
+    # Async Database (derived from database_url)
+    @property
+    def async_database_url(self) -> str:
+        """Convert sync database URL to async one."""
+        if self.database_url.startswith("postgresql+psycopg://"):
+            return self.database_url.replace("postgresql+psycopg://", "postgresql+asyncpg://", 1)
+        elif self.database_url.startswith("postgresql://"):
+            return self.database_url.replace("postgresql://", "postgresql+asyncpg://", 1)
+        return self.database_url
     
     # Security
     secret_key: str = Field(
@@ -38,6 +47,10 @@ class Settings(BaseSettings):
     media_root: str = Field(
         default="./data/media",
         description="Root directory for media storage"
+    )
+    MEDIA_STORAGE_ROOT: str = Field(
+        default="./data/media",
+        description="Root directory for media storage (alias for compatibility)"
     )
     clips_root: str = Field(
         default="./data/clips",
@@ -64,6 +77,30 @@ class Settings(BaseSettings):
     model_path: str = Field(
         default="yolov8n.pt",
         description="Path to YOLO model or ultralytics model identifier"
+    )
+    yolo_model_path: str = Field(
+        default="yolov8n.pt",
+        description="Path to YOLO model or ultralytics model identifier"
+    )
+    use_gpu: bool = Field(
+        default=False,
+        description="Enable GPU acceleration for inference"
+    )
+    detection_confidence_threshold: float = Field(
+        default=0.35,
+        ge=0.0,
+        le=1.0,
+        description="Minimum confidence threshold for detections"
+    )
+    detection_iou_threshold: float = Field(
+        default=0.45,
+        ge=0.0,
+        le=1.0,
+        description="IoU threshold for NMS"
+    )
+    detection_classes_filter: list[int] = Field(
+        default=[],
+        description="List of class IDs to filter (empty for all classes)"
     )
     confidence_threshold: float = Field(
         default=0.35,
@@ -156,6 +193,60 @@ class Settings(BaseSettings):
     enable_audit_logging: bool = Field(
         default=True,
         description="Enable audit trail for sensitive operations"
+    )
+    
+    # Retention Policies
+    retention_check_interval_hours: int = Field(
+        default=1,
+        ge=1,
+        le=24,
+        description="How often to run retention cleanup (in hours)"
+    )
+    retention_event_days: int = Field(
+        default=30,
+        ge=1,
+        le=365,
+        description="Days to retain event records"
+    )
+    retention_media_days: int = Field(
+        default=14,
+        ge=1,
+        le=365,
+        description="Days to retain media files (thumbnails, clips)"
+    )
+    
+    # Camera Settings
+    camera_max_reconnect_attempts: int = Field(
+        default=10,
+        ge=1,
+        le=100,
+        description="Maximum reconnection attempts before giving up"
+    )
+    
+    # Tracking Settings
+    track_max_misses: int = Field(
+        default=30,
+        ge=1,
+        le=100,
+        description="Maximum consecutive misses before marking track as lost"
+    )
+    track_iou_threshold: float = Field(
+        default=0.5,
+        ge=0.0,
+        le=1.0,
+        description="IoU threshold for track-detection matching"
+    )
+    track_trajectory_max_length: int = Field(
+        default=100,
+        ge=10,
+        le=1000,
+        description="Maximum number of points to store in track trajectory"
+    )
+    track_max_age: int = Field(
+        default=60,
+        ge=1,
+        le=600,
+        description="Maximum age of track in seconds before cleanup"
     )
     
     # Application
