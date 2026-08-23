@@ -2,15 +2,15 @@
 from app.search.reid import (
     ReIDFeatures,
     ReIDEmbedder,
-    ReIDMatcher,
-    get_embedder,
-    get_matcher,
+    CrossCameraTracker,
+    init_cross_camera_tracker,
+    get_cross_camera_tracker,
 )
 
 __all__ = [
     "ReIDFeatures",
     "ReIDEmbedder",
-    "ReIDMatcher",
-    "get_embedder",
-    "get_matcher",
+    "CrossCameraTracker",
+    "init_cross_camera_tracker",
+    "get_cross_camera_tracker",
 ]

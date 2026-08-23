@@ -6,13 +6,12 @@ Handles signals for graceful shutdown.
 import asyncio
 import signal
 import logging
-from typing import List, Dict
+from typing import Dict
 
 from app.core.config import settings
-from app.db.session import AsyncSessionLocal
+from app.db import AsyncSessionLocal
 from app.repositories.camera_repository import CameraRepository
 from app.workers.camera_worker import CameraWorker
-from app.models.entities import CameraStatus
 
 logger = logging.getLogger(__name__)
 

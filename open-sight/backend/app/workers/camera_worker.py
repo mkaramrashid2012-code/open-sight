@@ -6,19 +6,19 @@ import asyncio
 import cv2
 import time
 import logging
-from typing import Optional, Dict, Any
+from typing import Optional, Any
 from datetime import datetime
 from enum import Enum
 
 from app.core.config import settings
 from app.models.entities import CameraStatus
-from app.db.session import AsyncSessionLocal
+from app.db import AsyncSessionLocal
 from app.repositories.camera_repository import CameraRepository
 from app.services.detector import DetectorService
 from app.services.tracker_service import TrackerService
-from app.services.event_engine import EventEngine
+from app.engines.event_engine import EventEngine
 from app.services.media_service import MediaService
-from app.core.security import decrypt_rtsp_url
+from app.security import decrypt_rtsp_url
 
 logger = logging.getLogger(__name__)
 
@@ -52,7 +52,7 @@ class CameraWorker:
         self.dropped_frames = 0
         self.last_frame_time = 0.0
         self.reconnect_attempts = 0
-        self.max_reconnect_attempts = settings.CAMERA_MAX_RECONNECT_ATTEMPTS
+        self.max_reconnect_attempts = settings.camera_max_reconnect_attempts
         self.backoff_seconds = 1.0
         
         # Buffer for backpressure
@@ -105,10 +105,25 @@ class CameraWorker:
         self.state = CameraWorkerState.CONNECTING
         await self._update_camera_status(CameraStatus.CONNECTING)
         
-        self.cap = cv2.VideoCapture(decrypted_url)
+        # Support multiple camera types: RTSP, HTTP, Webcam (0, 1, etc.), video files
+        if decrypted_url.isdigit():
+            # Webcam index
+            self.cap = cv2.VideoCapture(int(decrypted_url))
+        elif decrypted_url.startswith(('http://', 'https://')):
+            # HTTP/HTTPS stream (IP cameras, YouTube, etc.)
+            self.cap = cv2.VideoCapture(decrypted_url, cv2.CAP_FFMPEG)
+        elif decrypted_url.endswith(('.mp4', '.avi', '.mkv', '.mov')):
+            # Video file
+            self.cap = cv2.VideoCapture(decrypted_url)
+        else:
+            # RTSP/RTMP or other protocols - try with FFMPEG first, then default
+            self.cap = cv2.VideoCapture(decrypted_url, cv2.CAP_FFMPEG)
+            if not self.cap.isOpened():
+                self.cap.release()
+                self.cap = cv2.VideoCapture(decrypted_url)
         
         if not self.cap.isOpened():
-            raise ConnectionError(f"Failed to open RTSP stream for camera {self.camera_id}")
+            raise ConnectionError(f"Failed to open camera stream for camera {self.camera_id} (URL: {decrypted_url[:50]}...)")
             
         self.state = CameraWorkerState.ONLINE
         self.reconnect_attempts = 0

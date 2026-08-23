@@ -4,7 +4,7 @@ Generates robust feature vectors for ReID using multi-modal deep learning featur
 Comparable to BriefCam's appearance matching without cloud dependencies
 """
 import numpy as np
-from typing import List, Dict, Optional, Tuple, Union
+from typing import List, Dict, Optional, Tuple
 from dataclasses import dataclass
 from datetime import datetime
 import logging

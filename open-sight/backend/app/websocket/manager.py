@@ -2,7 +2,6 @@
 Real-time WebSocket Server for Live Camera Streaming and Event Notifications
 Enterprise-grade bidirectional communication for dashboard updates
 """
-import asyncio
 import json
 from typing import Dict, Set, Optional, Any
 from datetime import datetime

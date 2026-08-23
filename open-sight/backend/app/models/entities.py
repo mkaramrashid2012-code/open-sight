@@ -33,6 +33,17 @@ class EventType(str, enum.Enum):
     CAMERA_REONLINE = "camera_reonline"
 
 
+class CameraStatus(str, enum.Enum):
+    """Camera lifecycle status."""
+    OFFLINE = "offline"
+    CONNECTING = "connecting"
+    ONLINE = "online"
+    DEGRADED = "degraded"
+    RECONNECTING = "reconnecting"
+    ERROR = "error"
+    STOPPED = "stopped"
+
+
 class Camera(Base):
     __tablename__ = "cameras"
     id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), primary_key=True, default=uuid4)

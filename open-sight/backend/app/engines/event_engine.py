@@ -3,8 +3,8 @@ Event Engine
 Converts raw tracks into semantic events (Intrusion, Loitering, etc.)
 """
 import logging
-from typing import List, Optional
-from datetime import datetime, timedelta
+from typing import List
+from datetime import datetime
 
 from app.services.tracker_service import TrackedObject, TrackState
 from app.models.entities import Event, EventType

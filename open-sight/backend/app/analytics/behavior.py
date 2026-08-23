@@ -2,7 +2,6 @@
 Advanced Behavioral Analytics Engine
 Enterprise-grade event detection: intrusion, loitering, line-crossing, crowd detection, object abandonment
 """
-import numpy as np
 from typing import List, Dict, Optional, Tuple
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta

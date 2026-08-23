@@ -2,7 +2,6 @@
 import logging
 from collections.abc import Generator
 from contextlib import contextmanager
-from functools import lru_cache
 from typing import Optional
 from sqlalchemy import create_engine, event, text
 from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker, scoped_session

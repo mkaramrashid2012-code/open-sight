@@ -11,8 +11,7 @@ from app.api.cameras import router as cameras_router
 from app.api.search import router as search_router
 from app.api.auth import router as auth_router
 from app.core.config import settings
-from app.core.db import init_database, db_manager, get_db
-from app.security import audit_log
+from app.core.db import init_database, db_manager
 
 # Configure enterprise-grade logging
 logging.basicConfig(
@@ -141,6 +140,8 @@ async def general_exception_handler(request: Request, exc: Exception):
 @app.get("/api/v1/health", tags=["Health"])
 def health_check():
     """Comprehensive health check endpoint."""
+    from datetime import datetime, timezone
+    
     db_health = db_manager.health_check()
     
     return {
@@ -148,7 +149,7 @@ def health_check():
         "service": "opensight-api",
         "version": settings.app_version,
         "database": db_health,
-        "timestamp": __import__("datetime").datetime.now(timezone.utc).isoformat(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
     }
 
 
